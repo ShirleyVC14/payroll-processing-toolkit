@@ -19,24 +19,53 @@ const employees = [
         hourlyRate: 24, 
         hoursWorked: 41 
     },
-
 ];
 
-function calulateBasePay(rate, hours) {
+function calculateBasePay(rate, hours) {
     const regularHours = Math.min(hours, 40);
     return regularHours * rate;
 }
-//Testing
-console.log(calulateBasePay(20,40));  //800
-console.log(calulateBasePay(22,42));  //880 (addtional 2 hours are not counted)
 
-function calulateOvertimePlay (rate, hours) {
+// Testing
+console.log(calculateBasePay(20,40));  //800
+console.log(calculateBasePay(22,42));  //880 (additional 2 hours are not counted)
+
+function calculateOvertimePay(rate, hours) {   // fixed spelling
     if (hours > 40) {
         const overtimeHours = hours - 40;
         return overtimeHours * rate * 1.5;
     }
     return 0;
 }
-//Testing
-console.log(calulateOvertimePlay(22,36)); //0 b/c no overtime done
-console.log(calulateOvertimePlay(24,41)); //
+
+// Testing
+console.log(calculateOvertimePay(22,36)); //0 b/c no overtime done
+console.log(calculateOvertimePay(24,41)); //36 
+
+function calculateTaxes(grossPay) {   // fixed camelCase
+    const taxRate = 0.15;
+    return grossPay - (grossPay * taxRate);
+}
+
+// Testing
+console.log(calculateTaxes(1000));      //850
+
+function processPayroll(employee) {   // single employee
+    const basePay = calculateBasePay(employee.hourlyRate, employee.hoursWorked);
+    const overtimePay = calculateOvertimePay(employee.hourlyRate, employee.hoursWorked);
+    const grossPay = basePay + overtimePay;
+    const netPay = calculateTaxes(grossPay);   // fixed variable name
+
+    return  {
+        name: employee.name,
+        basePay: basePay,
+        overtimePay: overtimePay,
+        grossPay: grossPay,
+        netPay: netPay
+    };
+}
+
+employees.forEach(employee => {   // looping through employees
+    const payrollReport = processPayroll(employee);
+    console.log(payrollReport);
+});
